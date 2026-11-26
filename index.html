@@ -53,6 +53,7 @@ h2{font:700 24px/1.15 'Barlow Condensed',sans-serif;margin:0 0 10px}
 .bar em{font:600 12px Barlow;font-style:normal;color:var(--muted)}
 .day.hrs .lbl{grid-row:auto}
 .bar.hrs{height:auto}.bar.hrs span{background:none;grid-column:span 3;font-size:12px;color:var(--muted);line-height:1}
+.bar.hrs span.end{display:flex;justify-content:space-between}.bar.hrs i{font-style:normal}
 .rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
 .rules h3{margin:0 0 4px;font:600 18px 'Barlow Condensed',sans-serif}
 .rules ul{margin:0;padding-left:1.1em}.rules li{margin:2px 0}
@@ -197,7 +198,7 @@ function render(){const t=now(),p=B(t);
    for(let h=0;h<24;h++){const ts=fromBerlin(q.y,q.m,q.d,h,0);const ok=blocked(ts,pr)==='';const isNow=d===0&&h===p.h;
     c+='<span class="'+(ok?'g':'')+(isNow?' now':'')+'" title="'+pad(h)+'–'+pad(h+1)+' Uhr: '+(ok?'gültig':'nicht gültig')+'"></span>'}return c+'</div>'};
   w+='<div class="day"><div class="lbl">'+WD[q.wd]+' '+pad(q.d)+'.'+pad(q.m)+'.'+(hn2?'<small>'+esc(hn2)+'</small>':'')+'</div>'+ORDER.map(row).join('')+'</div>'}
- w+='<div class="day hrs"><div class="lbl"></div><div class="bar hrs"><em></em>'+[0,3,6,9,12,15,18,21].map(h=>'<span>'+h+'</span>').join('')+'</div></div>';
+ w+='<div class="day hrs"><div class="lbl"></div><div class="bar hrs"><em></em>'+[0,3,6,9,12,15,18].map(h=>'<span>'+h+'</span>').join('')+'<span class="end"><i>21</i><i>24</i></span>'+'</div></div>';
  $('week').innerHTML=w}
 
 function tick(){const t=Date.now(),p=B(t);
