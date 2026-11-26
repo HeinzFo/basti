@@ -57,7 +57,7 @@ h2{font:700 24px/1.15 'Barlow Condensed',sans-serif;margin:0 0 10px}
 .rules h3{margin:0 0 4px;font:600 18px 'Barlow Condensed',sans-serif}
 .rules ul{margin:0;padding-left:1.1em}.rules li{margin:2px 0}
 .cur{display:inline-block;background:var(--goSoft);border-radius:4px;padding:0 6px;font-size:13px;font-weight:600;margin-left:6px}
-form{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.form{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 input,button.p{font:500 16px Barlow,sans-serif;min-height:44px;border-radius:8px;border:1px solid var(--line);padding:8px 12px;background:var(--bg);color:var(--ink)}
 button.p{background:var(--board);color:#fff;border:0;font-weight:600;cursor:pointer;padding:8px 16px}
 button.p.alt{background:transparent;color:var(--ink);border:1px solid var(--line)}
@@ -65,6 +65,7 @@ input:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid
 .res{margin-top:12px;font-size:17px}.res b.g{color:var(--go)}.res b.r{color:#c23a3a}
 details summary{cursor:pointer;font:700 22px 'Barlow Condensed',sans-serif;min-height:32px}
 details ol{margin:10px 0 0;padding-left:1.4em}details li{margin:3px 0}
+.links{margin:10px 0 0;padding-left:1.2em}.links li{margin:6px 0}.links a{color:var(--ink);font-weight:500;text-underline-offset:3px}.links a:hover{color:var(--go)}
 .foot{margin-top:18px;font-size:13px;color:var(--muted)}
 .foot a{color:inherit}
 @media(max-width:600px){.day{grid-template-columns:minmax(0,1fr)}.day .lbl{grid-row:auto}.day.hrs .lbl{display:none}.dot{width:44px;height:44px}}
@@ -106,12 +107,12 @@ details ol{margin:10px 0 0;padding-left:1.4em}details li{margin:3px 0}
 
  <section>
   <h2>Zeitpunkt prüfen</h2>
-  <form id="chk">
+  <div class="form" id="chk">
    <label for="when" style="position:absolute;left:-9999px">Datum und Uhrzeit</label>
    <input type="datetime-local" id="when" required>
-   <button class="p" type="submit">Prüfen</button>
+   <button class="p" type="button" id="chkBtn">Prüfen</button>
    <button class="p" type="button" id="simBtn">Zeitpunkt simulieren</button>
-  </form>
+  </div>
   <div class="res" id="res"></div>
  </section>
 
@@ -126,6 +127,17 @@ details ol{margin:10px 0 0;padding-left:1.4em}details li{margin:3px 0}
     <li>RB 54 München Hbf – Rosenheim – Kufstein (BRB)</li>
    </ol>
    <p style="margin:10px 0 0;color:var(--muted)">jeweils in beiden Richtungen</p>
+  </details>
+ </section>
+
+ <section>
+  <details>
+   <summary>Infos</summary>
+   <ul class="links">
+    <li><a href="https://bahnland-bayern.de/de/tickets/fahrradmitnahme/ticket/basti-r" target="_blank" rel="noopener">Bayern – S- und RE-Bahnen</a></li>
+    <li><a href="https://www.vgn.de/ratgeber/fahrrad/" target="_blank" rel="noopener">VGN – Busse und Bahnen</a></li>
+    <li><a href="https://www.nuernberg.de/internet/verkehrsplanung/radinbus.html" target="_blank" rel="noopener">Verkehrsplanung Nürnberg</a></li>
+   </ul>
   </details>
  </section>
 
@@ -194,10 +206,13 @@ function tick(){const t=Date.now(),p=B(t);
  if(sim===null&&p.s===0)render()}
 
 function parseWhen(){const v=$('when').value;const m=v.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);return m?fromBerlin(+m[1],+m[2],+m[3],+m[4],+m[5]):null}
-$('chk').addEventListener('submit',e=>{e.preventDefault();const t=parseWhen();if(t===null)return;
+function check(){const t=parseWhen();if(t===null){$('res').textContent='Bitte Datum und Uhrzeit eingeben.';return}
  $('res').innerHTML='<div><b>'+fmtY(t)+'</b></div>'+ORDER.map(pr=>{const r=blocked(t,pr);
-  return '<div>'+pr+': '+(r===''?'<b class="g">gültig</b>':'<b class="r">nicht gültig</b> – '+esc(r))+'</div>'}).join('')});
-$('simBtn').addEventListener('click',()=>{const t=parseWhen();if(t===null){$('when').reportValidity();return}sim=t;render();window.scrollTo({top:0,behavior:'smooth'})});
+  return '<div>'+pr+': '+(r===''?'<b class="g">gültig</b>':'<b class="r">nicht gültig</b> – '+esc(r))+'</div>'}).join('')}
+$('chkBtn').addEventListener('click',check);
+$('when').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();check()}});
+$('when').addEventListener('change',check);
+$('simBtn').addEventListener('click',()=>{const t=parseWhen();if(t===null){$('res').textContent='Bitte Datum und Uhrzeit eingeben.';return}sim=t;render();window.scrollTo({top:0,behavior:'smooth'})});
 $('simOff').addEventListener('click',()=>{sim=null;render()});
 {const p=B(Date.now());$('when').value=p.y+'-'+pad(p.m)+'-'+pad(p.d)+'T'+pad(p.h)+':'+pad(p.mi)}
 render();tick();setInterval(tick,1000);
