@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BaSTi Gültigkeit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* VOICE: nüchtern, wie eine Bahnhofsanzeige – klar, schnell lesbar
+   IDEA: Zugzielanzeiger am Bahnsteig: blaue Tafel, weiße Schrift, Signallampen
+   PICTURE: große Statuslampe DB + 7-Tage-Fahrplanband (Stundenraster)
+   COLOUR and TYPE: Tafelblau, Weiß, Signalgrün; Barlow Condensed für Anzeige, Barlow für Text
+   LAYOUT: Tafel oben (Uhr, Status, Wechsel), darunter Wochenband, Regeln, Prüfen, Strecken */
+:root{color-scheme:light dark;
+ --bg:light-dark(#e9edf3,#070d1a);--ink:light-dark(#0d1b33,#e6ecf7);--muted:light-dark(#4a5a74,#9aa8c0);
+ --board:light-dark(#0b3a82,#0a2a5e);--board2:light-dark(#0d4597,#0d3370);--on:#fff;
+ --go:#25b34a;--goSoft:#25b34a33;--stop:#8a93a3;--stopSoft:light-dark(#c9cfd8,#2a3448);--card:light-dark(#fff,#0f182b);--line:light-dark(#d5dbe5,#1e2a42)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Barlow,system-ui,sans-serif;overflow-x:clip}
+.wrap{max-width:980px;margin:0 auto;padding:clamp(16px,3vw,36px) max(4vw,14px) 48px}
+.board{background:linear-gradient(180deg,var(--board2),var(--board));color:var(--on);border-radius:14px;padding:clamp(18px,3vw,32px);box-shadow:0 14px 40px -18px #0b3a82aa,inset 0 1px 0 #ffffff22}
+.top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 20px;border-bottom:1px solid #ffffff2e;padding-bottom:12px}
+h1{font:700 clamp(30px,5vw,46px)/1.05 'Barlow Condensed',sans-serif;margin:0;letter-spacing:.01em}
+h1 small{display:block;font:500 16px/1.3 Barlow,sans-serif;opacity:.8;margin-top:4px}
+.clock{font:600 clamp(24px,4vw,34px)/1 'Barlow Condensed',sans-serif;font-variant-numeric:tabular-nums;white-space:nowrap}
+.clock span{display:block;font:500 14px Barlow,sans-serif;opacity:.8;text-align:right;margin-top:4px}
+.sim{display:none;margin-top:12px;background:#d92d2d;color:#fff;border-radius:8px;padding:8px 12px;font-weight:600}
+.sim.on{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+.sim button{background:#fff;color:#b11;border:0;border-radius:6px;padding:8px 14px;font:600 15px Barlow;cursor:pointer;min-height:40px}
+.hol{margin-top:12px;font-style:italic;font-weight:600;display:none}.hol.on{display:block}
+.lamps{display:grid;grid-template-columns:minmax(0,520px);gap:14px;margin-top:18px}
+.lamp{background:#00000026;border-radius:12px;padding:16px 18px;display:grid;grid-template-columns:auto 1fr;gap:4px 16px;align-items:center}
+.dot{grid-row:span 2;width:54px;height:54px;border-radius:50%;background:var(--stop);box-shadow:inset 0 -6px 10px #0004,0 0 0 4px #ffffff18}
+.lamp.ok .dot{background:radial-gradient(circle at 35% 30%,#9df0b0,var(--go) 55%,#16803a);box-shadow:0 0 22px #25b34aaa,0 0 0 4px #ffffff22}
+.lamp b{font:700 30px/1 'Barlow Condensed',sans-serif}
+.lamp .st{font:600 22px/1.1 'Barlow Condensed',sans-serif}
+.lamp.ok .st{color:#7ff09a}.lamp:not(.ok) .st{color:#c7ceda}
+.lamp p{grid-column:1/-1;margin:10px 0 0;font-size:15px;opacity:.92;line-height:1.45}
+.lamp p em{font-style:normal;opacity:.75}
+section{margin-top:22px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:clamp(16px,2.6vw,24px)}
+h2{font:700 24px/1.15 'Barlow Condensed',sans-serif;margin:0 0 10px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:14px;color:var(--muted);margin-bottom:10px}
+.legend i{display:inline-block;width:14px;height:10px;border-radius:2px;vertical-align:middle;margin-right:6px}
+.week{display:grid;gap:10px}
+.day{display:grid;grid-template-columns:7.2em minmax(0,1fr);gap:4px 12px;align-items:center}
+.day .lbl{font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.day .lbl small{display:block;font-weight:400;font-style:italic;color:var(--muted);white-space:normal;line-height:1.2}
+.bar{display:grid;grid-template-columns:2.6em repeat(24,minmax(0,1fr));gap:1px;align-items:center;height:16px}
+.bar span{height:100%;background:var(--stopSoft)}.bar span.g{background:var(--go)}
+.bar span.now{outline:2px solid var(--ink);outline-offset:-1px}
+.bar em{font:600 12px Barlow;font-style:normal;color:var(--muted)}
+.day.hrs .lbl{grid-row:auto}
+.bar.hrs{height:auto}.bar.hrs span{background:none;grid-column:span 3;font-size:12px;color:var(--muted);line-height:1}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.rules h3{margin:0 0 4px;font:600 18px 'Barlow Condensed',sans-serif}
+.rules ul{margin:0;padding-left:1.1em}.rules li{margin:2px 0}
+.cur{display:inline-block;background:var(--goSoft);border-radius:4px;padding:0 6px;font-size:13px;font-weight:600;margin-left:6px}
+form{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+input,button.p{font:500 16px Barlow,sans-serif;min-height:44px;border-radius:8px;border:1px solid var(--line);padding:8px 12px;background:var(--bg);color:var(--ink)}
+button.p{background:var(--board);color:#fff;border:0;font-weight:600;cursor:pointer;padding:8px 16px}
+button.p.alt{background:transparent;color:var(--ink);border:1px solid var(--line)}
+input:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid #25b34a;outline-offset:2px}
+.res{margin-top:12px;font-size:17px}.res b.g{color:var(--go)}.res b.r{color:#c23a3a}
+details summary{cursor:pointer;font:700 22px 'Barlow Condensed',sans-serif;min-height:32px}
+details ol{margin:10px 0 0;padding-left:1.4em}details li{margin:3px 0}
+.foot{margin-top:18px;font-size:13px;color:var(--muted)}
+.foot a{color:inherit}
+@media(max-width:600px){.day{grid-template-columns:minmax(0,1fr)}.day .lbl{grid-row:auto}.day.hrs .lbl{display:none}.dot{width:44px;height:44px}}
+@media(prefers-reduced-motion:no-preference){.lamp .dot{transition:background .6s,box-shadow .6s}}
+</style>
+</head>
+<body>
+<div class="wrap">
+ <div class="board" aria-live="polite">
+  <div class="top">
+   <h1>BaSTi (R) – Fahrrad im Regionalverkehr Bayern<small>Bayerisches Schienenpersonennahverkehrsticket Rad · 1 € Ticket</small></h1>
+   <div class="clock" id="clock">--:--:--<span id="date"></span></div>
+  </div>
+  <div class="sim" id="sim"><span id="simTxt"></span><button type="button" id="simOff">Zurück auf jetzt</button></div>
+  <div class="hol" id="hol"></div>
+  <div class="lamps" id="lamps"></div>
+ </div>
+
+ <section>
+  <h2>Die nächsten 7 Tage</h2>
+  <div class="legend"><span><i style="background:var(--go)"></i>gültig</span><span><i style="background:var(--stopSoft)"></i>nicht gültig</span><span>Stunden 0–24</span></div>
+  <div class="week" id="week"></div>
+ </section>
+
+ <section>
+  <h2 id="halbTitle">Sperrzeiten</h2>
+  <div class="rules">
+   <div><h3>Ganzjährig</h3><ul>
+    <li>Mo–Fr 3–9 Uhr</li>
+    <li>an bayernweiten Feiertagen sowie am 15. August</li></ul></div>
+   <div><h3>Sommerhalbjahr <span id="sumBadge"></span></h3><ul>
+    <li>15. März – 3. Oktober</li>
+    <li>zusätzlich Fr 12 Uhr bis Mo 3 Uhr (anschließend Morgensperre bis 9 Uhr)</li></ul></div>
+   <div><h3>Winterhalbjahr <span id="winBadge"></span></h3><ul>
+    <li>4. Oktober – 14. März</li>
+    <li>Wochenende frei (außer Feiertage)</li></ul></div>
+  </div>
+ </section>
+
+ <section>
+  <h2>Zeitpunkt prüfen</h2>
+  <form id="chk">
+   <label for="when" style="position:absolute;left:-9999px">Datum und Uhrzeit</label>
+   <input type="datetime-local" id="when" required>
+   <button class="p" type="submit">Prüfen</button>
+   <button class="p alt" type="button" id="simBtn">Tafel auf diesen Zeitpunkt stellen</button>
+  </form>
+  <div class="res" id="res"></div>
+ </section>
+
+ <section>
+  <details>
+   <summary>Gilt nicht auf diesen Strecken</summary>
+   <ol>
+    <li>RE 1 München Hbf – Nürnberg Hbf (DB Regio)</li>
+    <li>RE 23 München Hbf – Hof Hbf (Alex-Züge – Die Länderbahn)</li>
+    <li>RE 25 München Hbf – Furth im Wald (Alex-Züge – Die Länderbahn)</li>
+    <li>RE 5 München Hbf – Rosenheim – Salzburg (BRB)</li>
+    <li>RB 54 München Hbf – Rosenheim – Kufstein (BRB)</li>
+   </ol>
+   <p style="margin:10px 0 0;color:var(--muted)">jeweils in beiden Richtungen</p>
+  </details>
+ </section>
+
+ <p class="foot">Alle Zeiten in deutscher Zeit (Europe/Berlin), berechnet im Browser. Angaben ohne Gewähr – maßgeblich sind die Tarifbestimmungen auf <a href="https://bahnland-bayern.de/de/tickets/fahrradmitnahme/ticket/basti-r">bahnland-bayern.de</a>. Wochenenden am Rand des Sommerhalbjahres werden vollständig als gesperrt gewertet.</p>
+</div>
+
+<script>
+{
+const PROF={DB:9}, ORDER=['DB'], WD=['So','Mo','Di','Mi','Do','Fr','Sa'];
+const FIXED={'01-01':'Neujahr','01-06':'Heilige Drei Könige','05-01':'Tag der Arbeit','08-15':'Mariä Himmelfahrt','10-03':'Tag der Deutschen Einheit','11-01':'Allerheiligen','12-25':'1. Weihnachtstag','12-26':'2. Weihnachtstag'};
+const REL={'-2':'Karfreitag','1':'Ostermontag','39':'Christi Himmelfahrt','50':'Pfingstmontag','60':'Fronleichnam'};
+const HOUR=3600e3, pad=n=>String(n).padStart(2,'0');
+const fmtParts=new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/Berlin',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',weekday:'short',hourCycle:'h23'});
+const WDMAP={Sun:0,Mon:1,Tue:2,Wed:3,Thu:4,Fri:5,Sat:6};
+function B(t){const o={};for(const p of fmtParts.formatToParts(new Date(t)))o[p.type]=p.value;
+ return {y:+o.year,m:+o.month,d:+o.day,h:+o.hour,mi:+o.minute,s:+o.second,wd:WDMAP[o.weekday]}}
+function fromBerlin(y,m,d,h,mi){let t=Date.UTC(y,m-1,d,h,mi);
+ for(let i=0;i<3;i++){const p=B(t);t-=Date.UTC(p.y,p.m-1,p.d,p.h,p.mi)-Date.UTC(y,m-1,d,h,mi)}return t}
+const hcache={};
+function easter(y){const a=y%19,b=Math.floor(y/100),c=y%100,d=Math.floor(b/4),e=b%4,f=Math.floor((b+8)/25),g=Math.floor((b-f+1)/3),
+ h=(19*a+b-d-g+15)%30,i=Math.floor(c/4),k=c%4,l=(32+2*e+2*i-h-k)%7,m=Math.floor((a+11*h+22*l)/451),
+ mon=Math.floor((h+l-7*m+114)/31),day=((h+l-7*m+114)%31)+1;return Date.UTC(y,mon-1,day)}
+function holidays(y){if(hcache[y])return hcache[y];const h={...FIXED},e=easter(y);
+ for(const off in REL){const dt=new Date(e+off*864e5);h[pad(dt.getUTCMonth()+1)+'-'+pad(dt.getUTCDate())]=REL[off]}return hcache[y]=h}
+const holName=p=>holidays(p.y)[pad(p.m)+'-'+pad(p.d)];
+const isSummer=(m,d)=>{const md=pad(m)+'-'+pad(d);return md>='03-15'&&md<='10-03'};
+function blocked(t,prof){const p=B(t),end=PROF[prof];
+ const hn=holName(p);if(hn)return 'Feiertag ('+hn+')';
+ if(p.wd>=1&&p.wd<=5&&p.h>=3&&p.h<end)return 'Mo–Fr 3–'+end+' Uhr';
+ const we=(p.wd===5&&p.h>=12)||p.wd===6||p.wd===0||(p.wd===1&&p.h<3);
+ if(we){const back=[2,3,0,0,0,0,1][p.wd];const noon=Date.UTC(p.y,p.m-1,p.d,12)-back*864e5;
+  const f=new Date(noon),mo=new Date(noon+3*864e5);
+  if(isSummer(f.getUTCMonth()+1,f.getUTCDate())||isSummer(mo.getUTCMonth()+1,mo.getUTCDate()))return 'Wochenende im Sommerhalbjahr (Fr 12 – Mo '+end+' Uhr)'}
+ return ''}
+function hourStart(t){const p=B(t);return t-(p.mi*60+p.s)*1e3-(t%1e3)}
+function nextChange(t,prof){const cur=blocked(t,prof)==='';let s=hourStart(t)+HOUR;
+ for(let i=0;i<24*21;i++,s+=HOUR){const r=blocked(s,prof);if((r==='')!==cur)return [s,r]}return null}
+const fmt=t=>{const p=B(t);return WD[p.wd]+' '+pad(p.d)+'.'+pad(p.m)+'. '+pad(p.h)+':'+pad(p.mi)};
+const fmtY=t=>{const p=B(t);return WD[p.wd]+' '+pad(p.d)+'.'+pad(p.m)+'.'+p.y+' '+pad(p.h)+':'+pad(p.mi)};
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+let sim=null; const $=id=>document.getElementById(id);
+const now=()=>sim??Date.now();
+
+function render(){const t=now(),p=B(t);
+ $('sim').classList.toggle('on',sim!==null);if(sim!==null)$('simTxt').textContent='Simulation: '+fmtY(sim);
+ const hn=holName(p);$('hol').classList.toggle('on',!!hn);$('hol').textContent=hn?'Heute Feiertag: '+hn:'';
+ $('lamps').innerHTML=ORDER.map(pr=>{const r=blocked(t,pr),ok=r==='';const n=nextChange(t,pr);let txt='';
+  if(n){txt=(ok?'gültig bis ':'wieder gültig ab ')+'<b style="font:inherit;font-weight:600">'+fmt(n[0])+'</b>';
+   const u=nextChange(n[0],pr);if(u)txt+='<br><em>danach '+(ok?'wieder gültig ab ':'gültig bis ')+fmt(u[0])+'</em>'}
+  return '<div class="lamp'+(ok?' ok':'')+'"><div class="dot" aria-hidden="true"></div><b>'+pr+'</b><div class="st">'+(ok?'gültig':'nicht gültig')+'</div>'
+   +'<p>'+(ok?'':esc(r)+'<br>')+txt+'</p></div>'}).join('');
+ const sum=isSummer(p.m,p.d);$('sumBadge').innerHTML=sum?'<span class="cur">aktuell</span>':'';$('winBadge').innerHTML=sum?'':'<span class="cur">aktuell</span>';
+ $('halbTitle').textContent='Sperrzeiten · jetzt '+(sum?'Sommerhalbjahr':'Winterhalbjahr');
+ const noon0=fromBerlin(p.y,p.m,p.d,12,0);let w='';for(let d=0;d<7;d++){const q=B(noon0+d*864e5),h0=fromBerlin(q.y,q.m,q.d,0,0),hn2=holName(q);
+  const row=pr=>{let c='<div class="bar" role="img" aria-label="'+pr+'"><em>'+pr+'</em>';
+   for(let h=0;h<24;h++){const ts=fromBerlin(q.y,q.m,q.d,h,0);const ok=blocked(ts,pr)==='';const isNow=d===0&&h===p.h;
+    c+='<span class="'+(ok?'g':'')+(isNow?' now':'')+'" title="'+pad(h)+'–'+pad(h+1)+' Uhr: '+(ok?'gültig':'nicht gültig')+'"></span>'}return c+'</div>'};
+  w+='<div class="day"><div class="lbl">'+WD[q.wd]+' '+pad(q.d)+'.'+pad(q.m)+'.'+(hn2?'<small>'+esc(hn2)+'</small>':'')+'</div>'+ORDER.map(row).join('')+'</div>'}
+ w+='<div class="day hrs"><div class="lbl"></div><div class="bar hrs"><em></em>'+[0,3,6,9,12,15,18,21].map(h=>'<span>'+h+'</span>').join('')+'</div></div>';
+ $('week').innerHTML=w}
+
+function tick(){const t=Date.now(),p=B(t);
+ $('clock').firstChild.nodeValue=pad(p.h)+':'+pad(p.mi)+':'+pad(p.s);
+ $('date').textContent=WD[p.wd]+', '+pad(p.d)+'.'+pad(p.m)+'.'+p.y;
+ if(sim===null&&p.s===0)render()}
+
+function parseWhen(){const v=$('when').value;const m=v.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);return m?fromBerlin(+m[1],+m[2],+m[3],+m[4],+m[5]):null}
+$('chk').addEventListener('submit',e=>{e.preventDefault();const t=parseWhen();if(t===null)return;
+ $('res').innerHTML='<div><b>'+fmtY(t)+'</b></div>'+ORDER.map(pr=>{const r=blocked(t,pr);
+  return '<div>'+pr+': '+(r===''?'<b class="g">gültig</b>':'<b class="r">nicht gültig</b> – '+esc(r))+'</div>'}).join('')});
+$('simBtn').addEventListener('click',()=>{const t=parseWhen();if(t===null){$('when').reportValidity();return}sim=t;render();window.scrollTo({top:0,behavior:'smooth'})});
+$('simOff').addEventListener('click',()=>{sim=null;render()});
+{const p=B(Date.now());$('when').value=p.y+'-'+pad(p.m)+'-'+pad(p.d)+'T'+pad(p.h)+':'+pad(p.mi)}
+render();tick();setInterval(tick,1000);
+}
+</script>
+</body>
+</html>
