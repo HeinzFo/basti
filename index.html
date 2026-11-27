@@ -52,7 +52,7 @@ h2{font:700 24px/1.15 'Barlow Condensed',sans-serif;margin:0 0 10px}
 .day{display:grid;grid-template-columns:7.2em minmax(0,1fr);gap:4px 12px;align-items:center}
 .day .lbl{font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
 .day .lbl small{display:block;font-weight:400;font-style:italic;color:var(--muted);white-space:normal;line-height:1.2}
-.bar{display:grid;grid-template-columns:2.6em repeat(24,minmax(0,1fr));gap:1px;align-items:center;height:16px}
+.bar{display:grid;grid-template-columns:repeat(24,minmax(0,1fr));gap:1px;align-items:center;height:16px}
 .bar span{height:100%;background:var(--stopSoft)}.bar span.g{background:var(--go)}
 .bar span.now{outline:2px solid var(--ink);outline-offset:-1px}
 .bar em{font:600 12px Barlow;font-style:normal;color:var(--muted)}
@@ -96,7 +96,7 @@ details ol{margin:10px 0 0;padding-left:1.4em}details li{margin:3px 0}
 
  <section>
   <h2>Die nächsten 7 Tage</h2>
-  <div class="legend"><span><i style="background:var(--go)"></i>gültig</span><span><i style="background:var(--stopSoft)"></i>nicht gültig</span><span>Stunden 0–24</span></div>
+  <div class="legend"><span><i style="background:var(--go)"></i>gültig</span><span><i style="background:var(--stopSoft)"></i>nicht gültig</span><span>DB – RE/RB und S&#8209;Bahn · Stunden 0–24</span></div>
   <div class="week" id="week"></div>
  </section>
 
@@ -249,11 +249,11 @@ function render(){const t=now(),p=B(t);
  const sum=isSummer(p.m,p.d);$('sumBadge').innerHTML=sum?'<span class="cur">aktuell</span>':'';$('winBadge').innerHTML=sum?'':'<span class="cur">aktuell</span>';
  $('halbTitle').textContent='Sperrzeiten · aktuell '+(sum?'Sommerhalbjahr':'Winterhalbjahr');
  const noon0=fromBerlin(p.y,p.m,p.d,12,0);let w='';for(let d=0;d<7;d++){const q=B(noon0+d*864e5),h0=fromBerlin(q.y,q.m,q.d,0,0),hn2=holName(q);
-  const row=pr=>{let c='<div class="bar" role="img" aria-label="'+pr+'"><em>'+pr+'</em>';
+  const row=pr=>{let c='<div class="bar" role="img" aria-label="'+(LABEL[pr]||pr)+'">';
    for(let h=0;h<24;h++){const ts=fromBerlin(q.y,q.m,q.d,h,0);const ok=blocked(ts,pr)==='';const isNow=d===0&&h===p.h;
     c+='<span class="'+(ok?'g':'')+(isNow?' now':'')+'" title="'+pad(h)+'–'+pad(h+1)+' Uhr: '+(ok?'gültig':'nicht gültig')+'"></span>'}return c+'</div>'};
   w+='<div class="day"><div class="lbl">'+WD[q.wd]+' '+pad(q.d)+'.'+pad(q.m)+'.'+(hn2?'<small>'+esc(hn2)+'</small>':'')+'</div>'+ORDER.map(row).join('')+'</div>'}
- w+='<div class="day hrs"><div class="lbl"></div><div class="bar hrs"><em></em>'+[0,3,6,9,12,15,18].map(h=>'<span>'+h+'</span>').join('')+'<span class="end"><i>21</i><i>24</i></span>'+'</div></div>';
+ w+='<div class="day hrs"><div class="lbl"></div><div class="bar hrs">'+[0,3,6,9,12,15,18].map(h=>'<span>'+h+'</span>').join('')+'<span class="end"><i>21</i><i>24</i></span>'+'</div></div>';
  $('week').innerHTML=w}
 
 function tick(){const t=Date.now(),p=B(t);
