@@ -77,6 +77,10 @@ details ol{margin:10px 0 0;padding-left:1.4em}details li{margin:3px 0}
 .legal{font-size:15px;line-height:1.55}.legal h3{margin:14px 0 4px;font:600 18px 'Barlow Condensed',sans-serif}.legal p{margin:0 0 8px}
 .legal address{font-style:normal;margin:4px 0 8px}
 .footnav{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:8px}.footnav a{font-weight:600}
+.legaldlg{width:min(680px,calc(100vw - 24px));max-height:calc(100vh - 48px);border:0;border-radius:14px;padding:0;background:var(--card);color:var(--ink);box-shadow:0 24px 60px -20px #0008}
+.legaldlg::backdrop{background:#0b1a33aa}
+.dlgin{padding:0 clamp(16px,3vw,28px) clamp(16px,3vw,28px)}.dlghead{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:4px;position:sticky;top:0;background:var(--card);padding:clamp(14px,2.5vw,22px) 0 8px}.dlghead h2{margin:0}
+.legaldlg a{color:inherit}
 .foot a{color:inherit}
 @media(max-width:600px){.day{grid-template-columns:minmax(0,1fr)}.day .lbl{grid-row:auto}.day.hrs .lbl{display:none}.dot{width:44px;height:44px}}
 @media(prefers-reduced-motion:no-preference){.lamp .dot{transition:background .6s,box-shadow .6s}}
@@ -153,24 +157,12 @@ h1 small a{color:inherit;text-decoration:underline;text-decoration-color:#ffffff
   </details>
  </section>
 
- <section>
-  <details id="haftung">
-   <summary>Haftungsausschluss</summary>
-   <div class="legal">
-    <h3>Inhalt dieser Seite</h3>
-    <p>Diese Seite ist ein privates, nicht kommerzielles Hilfsangebot. Die Gültigkeitszeiten werden automatisch aus den veröffentlichten Tarifbestimmungen berechnet. Trotz sorgfältiger Erstellung übernehme ich keine Gewähr für Richtigkeit, Vollständigkeit und Aktualität. Tarifänderungen, Sonderregelungen, örtliche Feiertage oder Betriebsstörungen werden möglicherweise nicht oder verspätet berücksichtigt.</p>
-    <p>Verbindlich sind allein die Tarifbestimmungen der Verkehrsunternehmen und Verkehrsverbünde. Bitte prüfe vor Fahrtantritt die offiziellen Angaben. Für Schäden aus der Nutzung dieser Seite, etwa ein erhöhtes Beförderungsentgelt, hafte ich nur bei Vorsatz und grober Fahrlässigkeit; die Haftung für Schäden aus der Verletzung von Leben, Körper oder Gesundheit bleibt unberührt.</p>
-    <h3>Externe Links</h3>
-    <p>Diese Seite enthält Links zu Websites Dritter, auf deren Inhalte ich keinen Einfluss habe. Für diese Inhalte ist stets der jeweilige Anbieter oder Betreiber verantwortlich. Zum Zeitpunkt der Verlinkung waren keine Rechtsverstöße erkennbar. Werden mir Rechtsverletzungen bekannt, entferne ich die betreffenden Links umgehend.</p>
-   </div>
-  </details>
- </section>
-
- <section>
-  <details id="impressum">
-   <summary>Impressum</summary>
-   <div class="legal">
-    <h3>Angaben gemäß § 18 Abs. 2 MStV (und § 5 DDG)</h3>
+ <p class="foot"><b>Privates, nicht kommerzielles Angebot – keine offizielle Seite der Bahn, der Bayerischen Eisenbahngesellschaft oder des VGN.</b><br>Alle Zeiten in deutscher Zeit (Europe/Berlin), berechnet im Browser. Angaben ohne Gewähr – maßgeblich sind die Tarifbestimmungen auf <a href="https://bahnland-bayern.de/de/tickets/fahrradmitnahme/ticket/basti-r">bahnland-bayern.de</a>. Wochenenden am Rand des Sommerhalbjahres werden vollständig als gesperrt gewertet.</p>
+ <nav class="foot footnav" aria-label="Rechtliches"><a href="#impressum" data-open>Impressum</a><a href="#datenschutz" data-open>Datenschutz</a><a href="#haftung" data-open>Haftungsausschluss</a></nav>
+ <dialog id="impressum" class="legaldlg" aria-labelledby="impressum-t"><div class="dlgin">
+  <div class="dlghead"><h2 id="impressum-t">Impressum</h2><button type="button" class="p" data-close>Schließen</button></div>
+  <div class="legal">
+    <h3>Angaben gemäß § 18 Abs. 1 MStV</h3>
     <!-- HIER DEINE ECHTEN DATEN EINTRAGEN (keine Postfachadresse) -->
     <address>
      Heinz Fochler<br>
@@ -178,27 +170,30 @@ h1 small a{color:inherit;text-decoration:underline;text-decoration-color:#ffffff
      90411 Nürnberg
     </address>
    </div>
-  </details>
- </section>
-
- <section>
-  <details id="datenschutz">
-   <summary>Datenschutz</summary>
-   <div class="legal">
+ </div> </dialog>
+ <dialog id="datenschutz" class="legaldlg" aria-labelledby="datenschutz-t"><div class="dlgin">
+  <div class="dlghead"><h2 id="datenschutz-t">Datenschutz</h2><button type="button" class="p" data-close>Schließen</button></div>
+  <div class="legal">
     <h3>Verantwortlicher</h3>
     <p>Verantwortlich für die Datenverarbeitung auf dieser Seite ist die im Impressum genannte Person.</p>
     <h3>Was diese Seite selbst tut</h3>
     <p>Diese Seite setzt keine Cookies, nutzt keine Analyse- oder Tracking-Dienste, speichert keine Eingaben und lädt keine Inhalte von fremden Servern; die Schriften sind in die Seite eingebettet. Alle Berechnungen finden ausschließlich in deinem Browser statt.</p>
     <h3>Hosting bei GitHub Pages</h3>
-    <p>Diese Seite wird über GitHub Pages bereitgestellt, einen Dienst der GitHub, Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, USA (für Nutzer im Europäischen Wirtschaftsraum: GitHub B.V., Prins Bernhardplein 200, 1097 JB Amsterdam, Niederlande). Beim Aufruf verarbeitet GitHub technisch notwendige Verbindungsdaten, insbesondere deine IP-Adresse, um die Seite auszuliefern und die Systemsicherheit zu gewährleisten. Diese Daten werden laut GitHub nur vorübergehend zu Sicherheits- und Fehleranalysezwecken protokolliert. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einer sicheren und zuverlässigen Bereitstellung). Sofern Daten in die USA übertragen werden, ist GitHub nach dem EU-US Data Privacy Framework zertifiziert. Weitere Informationen findest du in der Datenschutzerklärung von GitHub.</a>.</p>
+    <p>Diese Seite wird über GitHub Pages bereitgestellt, einen Dienst der GitHub, Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, USA (für Nutzer im Europäischen Wirtschaftsraum: GitHub B.V., Prins Bernhardplein 200, 1097 JB Amsterdam, Niederlande). Beim Aufruf verarbeitet GitHub technisch notwendige Verbindungsdaten, insbesondere deine IP-Adresse, um die Seite auszuliefern und die Systemsicherheit zu gewährleisten. Diese Daten werden laut GitHub nur vorübergehend zu Sicherheits- und Fehleranalysezwecken protokolliert. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einer sicheren und zuverlässigen Bereitstellung). Sofern Daten in die USA übertragen werden, ist GitHub nach dem EU-US Data Privacy Framework zertifiziert. Weitere Informationen findest du in der <a href="https://docs.github.com/de/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener">Datenschutzerklärung von GitHub</a>.</p>
     <h3>Deine Rechte</h3>
     <p>Du hast das Recht auf Auskunft, Berichtigung, Löschung und Einschränkung der Verarbeitung sowie ein Widerspruchsrecht (Art. 15–18, 21 DSGVO). Außerdem kannst du dich bei einer Datenschutz-Aufsichtsbehörde beschweren, in Bayern beim Bayerischen Landesamt für Datenschutzaufsicht (BayLDA), Promenade 18, 91522 Ansbach.</p>
    </div>
-  </details>
- </section>
-
- <p class="foot"><b>Privates, nicht kommerzielles Angebot – keine offizielle Seite der Bahn, der Bayerischen Eisenbahngesellschaft oder des VGN.</b><br>Alle Zeiten in deutscher Zeit (Europe/Berlin), berechnet im Browser. Angaben ohne Gewähr – maßgeblich sind die Tarifbestimmungen auf <a href="https://bahnland-bayern.de/de/tickets/fahrradmitnahme/ticket/basti-r">bahnland-bayern.de</a>. Wochenenden am Rand des Sommerhalbjahres werden vollständig als gesperrt gewertet.</p>
- <nav class="foot footnav" aria-label="Rechtliches"><a href="#impressum" data-open>Impressum</a><a href="#datenschutz" data-open>Datenschutz</a><a href="#haftung" data-open>Haftungsausschluss</a></nav>
+ </div> </dialog>
+ <dialog id="haftung" class="legaldlg" aria-labelledby="haftung-t"><div class="dlgin">
+  <div class="dlghead"><h2 id="haftung-t">Haftungsausschluss</h2><button type="button" class="p" data-close>Schließen</button></div>
+  <div class="legal">
+    <h3>Inhalt dieser Seite</h3>
+    <p>Diese Seite ist ein privates, nicht kommerzielles Hilfsangebot. Die Gültigkeitszeiten werden automatisch aus den veröffentlichten Tarifbestimmungen berechnet. Trotz sorgfältiger Erstellung übernehme ich keine Gewähr für Richtigkeit, Vollständigkeit und Aktualität. Tarifänderungen, Sonderregelungen, örtliche Feiertage oder Betriebsstörungen werden möglicherweise nicht oder verspätet berücksichtigt.</p>
+    <p>Verbindlich sind allein die Tarifbestimmungen der Verkehrsunternehmen und Verkehrsverbünde. Bitte prüfe vor Fahrtantritt die offiziellen Angaben. Für Schäden aus der Nutzung dieser Seite, etwa ein erhöhtes Beförderungsentgelt, hafte ich nur bei Vorsatz und grober Fahrlässigkeit; die Haftung für Schäden aus der Verletzung von Leben, Körper oder Gesundheit bleibt unberührt.</p>
+    <h3>Externe Links</h3>
+    <p>Diese Seite enthält Links zu Websites Dritter, auf deren Inhalte ich keinen Einfluss habe. Für diese Inhalte ist stets der jeweilige Anbieter oder Betreiber verantwortlich. Zum Zeitpunkt der Verlinkung waren keine Rechtsverstöße erkennbar. Werden mir Rechtsverletzungen bekannt, entferne ich die betreffenden Links umgehend.</p>
+   </div>
+ </div> </dialog>
 </div>
 
 <script>
@@ -272,7 +267,13 @@ $('when').addEventListener('change',check);
 $('simBtn').addEventListener('click',()=>{const t=parseWhen();if(t===null){$('res').textContent='Bitte Datum und Uhrzeit eingeben.';return}sim=t;render();window.scrollTo({top:0,behavior:'smooth'})});
 $('simOff').addEventListener('click',()=>{sim=null;render()});
 {const p=B(Date.now());$('when').value=p.y+'-'+pad(p.m)+'-'+pad(p.d)+'T'+pad(p.h)+':'+pad(p.mi)}
-for(const a of document.querySelectorAll('a[data-open]'))a.addEventListener('click',e=>{const d=document.querySelector(a.getAttribute('href'));if(d){e.preventDefault();d.open=true;d.scrollIntoView({behavior:'smooth',block:'start'})}});
+const openDlg=id=>{const d=document.getElementById(id);if(!d||!d.showModal)return false;if(!d.open)d.showModal();return true};
+for(const a of document.querySelectorAll('a[data-open]'))a.addEventListener('click',e=>{if(openDlg(a.getAttribute('href').slice(1)))e.preventDefault()});
+for(const d of document.querySelectorAll('dialog.legaldlg')){
+ d.querySelector('[data-close]').addEventListener('click',()=>d.close());
+ d.addEventListener('click',e=>{if(e.target===d)d.close()});
+}
+if(['impressum','datenschutz','haftung'].includes(location.hash.slice(1)))openDlg(location.hash.slice(1));
 render();tick();setInterval(tick,1000);
 }
 </script>
