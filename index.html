@@ -101,7 +101,7 @@ h1 small a{color:inherit;text-decoration:underline;text-decoration-color:#ffffff
 
  <section>
   <h2>Die nächsten 7 Tage</h2>
-  <div class="legend"><span><i style="background:var(--go)"></i>gültig</span><span><i style="background:var(--stopSoft)"></i>nicht gültig</span><span>DB – RE/RB und S&#8209;Bahn · Stunden 0–24</span></div>
+  <div class="legend"><span><i style="background:var(--go)"></i>gültig</span><span><i style="background:var(--stopSoft)"></i>nicht gültig</span><span>DB – Regional und S&#8209;Bahnen · Stunden 0–24</span></div>
   <div class="week" id="week"></div>
  </section>
 
@@ -194,7 +194,7 @@ h1 small a{color:inherit;text-decoration:underline;text-decoration-color:#ffffff
 
 <script>
 {
-const PROF={DB:9}, ORDER=['DB'], LABEL={DB:'DB – RE/RB und S\u2011Bahn'}, WD=['So','Mo','Di','Mi','Do','Fr','Sa'];
+const PROF={DB:9}, ORDER=['DB'], LABEL={DB:'DB – Regional und S\u2011Bahnen'}, WD=['So','Mo','Di','Mi','Do','Fr','Sa'];
 const FIXED={'01-01':'Neujahr','01-06':'Heilige Drei Könige','05-01':'Tag der Arbeit','08-15':'Mariä Himmelfahrt','10-03':'Tag der Deutschen Einheit','11-01':'Allerheiligen','12-25':'1. Weihnachtstag','12-26':'2. Weihnachtstag'};
 const REL={'-2':'Karfreitag','1':'Ostermontag','39':'Christi Himmelfahrt','50':'Pfingstmontag','60':'Fronleichnam'};
 const HOUR=3600e3, pad=n=>String(n).padStart(2,'0');
