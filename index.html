@@ -247,7 +247,7 @@ function render(){const t=now(),p=B(t);
   return '<div class="lamp'+(ok?' ok':'')+'"><div class="dot" aria-hidden="true"></div><b>'+pr+'</b><div class="st">'+(ok?'gültig':'nicht gültig')+'</div>'
    +'<p>'+(ok?'':esc(r)+'<br>')+txt+'</p></div>'}).join('');
  const sum=isSummer(p.m,p.d);$('sumBadge').innerHTML=sum?'<span class="cur">aktuell</span>':'';$('winBadge').innerHTML=sum?'':'<span class="cur">aktuell</span>';
- $('halbTitle').textContent='Sperrzeiten · jetzt '+(sum?'Sommerhalbjahr':'Winterhalbjahr');
+ $('halbTitle').textContent='Sperrzeiten · aktuell '+(sum?'Sommerhalbjahr':'Winterhalbjahr');
  const noon0=fromBerlin(p.y,p.m,p.d,12,0);let w='';for(let d=0;d<7;d++){const q=B(noon0+d*864e5),h0=fromBerlin(q.y,q.m,q.d,0,0),hn2=holName(q);
   const row=pr=>{let c='<div class="bar" role="img" aria-label="'+pr+'"><em>'+pr+'</em>';
    for(let h=0;h<24;h++){const ts=fromBerlin(q.y,q.m,q.d,h,0);const ok=blocked(ts,pr)==='';const isNow=d===0&&h===p.h;
