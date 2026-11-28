@@ -255,7 +255,7 @@ function render(){const t=now(),p=B(t);
     const lab=(isNow||first||last)?h+'<i>–'+(h+1)+'</i>':'';
     c+='<span class="'+(ok?'g':'')+(isNow?' now':'')+(first||last?' edge':'')+'" title="'+pad(h)+'–'+pad(h+1)+' Uhr: '+(ok?'gültig':'nicht gültig')+'">'+lab+'</span>'}return c+'</div>'};
   w+='<div class="day"><div class="lbl">'+WD[q.wd]+' '+pad(q.d)+'.'+pad(q.m)+'.'+(hn2?'<small>'+esc(hn2)+'</small>':'')+'</div>'+ORDER.map(row).join('')+'</div>'}
- w+='<div class="day hrs"><div class="lbl"></div><div class="bar hrs">'+[0,6,12].map(h=>'<span style="grid-column:span 6">'+h+'</span>').join('')+'<span class="end" style="grid-column:span 6"><i>18</i><i>24</i></span>'+'</div></div>';
+ w+='<div class="day hrs"><div class="lbl"></div><div class="bar hrs">'+[0,3,6,9,12,15,18].map(h=>'<span style="grid-column:span 6">'+h+'</span>').join('')+'<span class="end" style="grid-column:span 6"><i>18</i><i>24</i></span>'+'</div></div>';
  $('week').innerHTML=w}
 
 function tick(){const t=Date.now(),p=B(t);
