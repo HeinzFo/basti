@@ -258,7 +258,7 @@ const now=()=>sim??Date.now();
 
 function render(){const t=now(),p=B(t);
  $('sim').classList.toggle('on',sim!==null);if(sim!==null)$('simTxt').textContent='Simulation: '+fmtY(sim);
- const hn=holName(p);$('hol').textContent=hn?'Heute Feiertag: '+hn+', '+['So','Mo','Di','Mi','Do','Fr','Sa'][new Date(Date.UTC(p.y,p.m-1,p.d)).getUTCDay()]+'. '+pad(p.d)+'.'+pad(p.m)+'.'+p.y:'';
+  const hn=holName(p);$('hol').classList.toggle('on',!!hn);$('hol').textContent=hn?'Heute Feiertag: '+hn+', '+['So','Mo','Di','Mi','Do','Fr','Sa'][new Date(Date.UTC(p.y,p.m-1,p.d)).getUTCDay()]+'. '+pad(p.d)+'.'+pad(p.m)+'.'+p.y:'';
  $('lamps').innerHTML=ORDER.map(pr=>{const r=blocked(t,pr),ok=r==='';const n=nextChange(t,pr);let txt='';
   if(n){txt=(ok?'gültig bis ':'wieder gültig ab ')+'<b style="font:inherit;font-weight:600">'+fmt(n[0])+'</b>';
    const u=nextChange(n[0],pr);if(u)txt+='<br><em>danach '+(ok?'wieder gültig ab ':'gültig bis ')+fmt(u[0])+'</em>'}
