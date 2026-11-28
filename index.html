@@ -27,7 +27,7 @@ body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Barlow,system
 .wrap{max-width:980px;margin:0 auto;padding:clamp(16px,3vw,36px) max(4vw,14px) 48px}
 .board{background:linear-gradient(180deg,var(--board2),var(--board));color:var(--on);border-radius:14px;padding:clamp(18px,3vw,32px);box-shadow:0 14px 40px -18px #0b3a82aa,inset 0 1px 0 #ffffff22}
 .top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 20px;border-bottom:1px solid #ffffff2e;padding-bottom:12px}
-h1{font:700 clamp(30px,5vw,46px)/1.05 'Barlow Condensed',sans-serif;margin:0;letter-spacing:.01em}
+h1{font:700 clamp(30px,5vw,42px)/1.05 'Barlow Condensed',sans-serif;margin:0;letter-spacing:.01em}
 h1 small{display:block;font:500 16px/1.3 Barlow,sans-serif;opacity:.8;margin-top:4px}
 .clock{font:600 clamp(24px,4vw,34px)/1 'Barlow Condensed',sans-serif;font-variant-numeric:tabular-nums;white-space:nowrap}
 .clock span{display:inline;font:500 .85em Barlow,sans-serif;opacity:.85;margin-left:.6em}
@@ -88,13 +88,14 @@ h1 small a{color:inherit;text-decoration:underline;text-decoration-color:#ffffff
 .bar.hrs span.end i:last-child{transform:translateX(60%)}
 h1 a{color:inherit;text-decoration:none}h1 a:hover{text-decoration:underline;text-decoration-color:#ffffff66;text-underline-offset:4px}
 .ext{width:.5em;height:.5em;margin-left:.25em;vertical-align:.45em;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;opacity:.7}
+.nw{white-space:nowrap}
 </style>
 </head>
 <body>
 <div class="wrap">
  <div class="board" aria-live="polite">
   <div class="top">
-   <h1><a href="https://bahnland-bayern.de/de/tickets/fahrradmitnahme/ticket/basti-r" target="_blank" rel="noopener">1&#8239;€ Ticket – Fahrrad im Regionalverkehr Bayern<svg class="ext" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a><!-- <small><a href="https://bahnland-bayern.de/de/tickets/fahrradmitnahme/ticket/basti-r" target="_blank" rel="noopener">Bayerisches Schienenpersonennahverkehrsticket Rad</a></small> --></h1>
+   <h1><a href="https://bahnland-bayern.de/de/tickets/fahrradmitnahme/ticket/basti-r" target="_blank" rel="noopener">1&#8239;€ Ticket – Fahrrad im Regionalverkehr <span class="nw">Bayern<svg class="ext" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></span></a><!-- <small><a href="https://bahnland-bayern.de/de/tickets/fahrradmitnahme/ticket/basti-r" target="_blank" rel="noopener">Bayerisches Schienenpersonennahverkehrsticket Rad</a></small> --></h1>
    <div class="clock" id="clock">--:--:--<span id="date"></span></div>
   </div>
   <div class="sim" id="sim"><span id="simTxt"></span><button type="button" id="simOff">Zurück auf jetzt</button></div>
