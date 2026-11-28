@@ -91,6 +91,7 @@ h1 a{color:inherit;text-decoration:none}h1 a:hover{text-decoration:underline;tex
 .nw{white-space:nowrap}
 .bar span.now{display:flex;align-items:center;justify-content:center;font:700 11px/1 Barlow,sans-serif;color:var(--ink)}.bar span.now.g{color:#fff}
 .bar span.edge{display:flex;align-items:center;justify-content:center;font:600 11px/1 Barlow,sans-serif;color:var(--muted)}
+.bar span.edge,.bar span.now{white-space:nowrap}.bar span.edge i,.bar span.now i{font-style:normal}@media(max-width:1100px){.bar span.edge i,.bar span.now i{display:none}}
 </style>
 </head>
 <body>
@@ -251,7 +252,7 @@ function render(){const t=now(),p=B(t);
    let c='<div class="bar" role="img" aria-label="'+(LABEL[pr]||pr)+'">';
    for(let h=0;h<24;h++){const ok=oks[h],isNow=d===0&&h===p.h;
     const first=!ok&&(h===0||oks[h-1]),last=!ok&&(h===23||oks[h+1]);
-    const lab=isNow||first?h:last?h:'';
+    const lab=(isNow||first||last)?h+'<i>–'+(h+1)+'</i>':'';
     c+='<span class="'+(ok?'g':'')+(isNow?' now':'')+(first||last?' edge':'')+'" title="'+pad(h)+'–'+pad(h+1)+' Uhr: '+(ok?'gültig':'nicht gültig')+'">'+lab+'</span>'}return c+'</div>'};
   w+='<div class="day"><div class="lbl">'+WD[q.wd]+' '+pad(q.d)+'.'+pad(q.m)+'.'+(hn2?'<small>'+esc(hn2)+'</small>':'')+'</div>'+ORDER.map(row).join('')+'</div>'}
  w+='<div class="day hrs"><div class="lbl"></div><div class="bar hrs">'+[0,6,12].map(h=>'<span style="grid-column:span 6">'+h+'</span>').join('')+'<span class="end" style="grid-column:span 6"><i>18</i><i>24</i></span>'+'</div></div>';
