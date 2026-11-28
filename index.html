@@ -261,7 +261,7 @@ function render(){const t=now(),p=B(t);
     const txt=(h===0&&e===24)?'<span class="lt">ganztägig </span>nicht gültig':h+'–'+e+'<span class="lt"> Uhr</span>';
     let pd='';if(d===0&&p.h>=h&&p.h<e){const L=p.h-h,R=e-p.h-1,n=e-h;pd=R>=L?';padding-left:calc('+(L+1)+' / '+n+' * 100%)':';padding-right:calc('+(R+1)+' / '+n+' * 100%)'}
     c+='<span class="blk" style="grid-column:span '+(e-h)+pd+'" title="'+pad(h)+'–'+pad(e)+' Uhr: nicht gültig"><span class="tx">'+txt+'</span></span>';h=e}
-    if(d===0)c+='<span class="nowm'+(oks[p.h]?' g':'')+'" style="left:calc('+p.h+' * (100% + 1px) / 24)">'+(oks[p.h]?p.h+'<i>–'+(p.h+1)+'</i>':'')+'</span>';
+   if(d===0)c+='<span class="nowm'+(oks[p.h]?' g':'')+'" style="left:calc('+p.h+' * (100% + 1px) / 24)">'+p.h+'<i>–'+(p.h+1)+'</i></span>';
    return c+'</div>'};
   w+='<div class="day"><div class="lbl">'+WD[q.wd]+' '+pad(q.d)+'.'+pad(q.m)+'.'+(hn2?'<small>'+esc(hn2)+'</small>':'')+'</div>'+ORDER.map(row).join('')+'</div>'}
   w+='<div class="day hrs"><div class="lbl"></div><div class="bar hrs">'+[0,3,6,9,12,15,18].map(h=>'<span>'+h+'</span>').join('')+'<span class="end"><i>21</i><i>24</i></span>'+'</div></div>';
