@@ -90,6 +90,7 @@ h1 a{color:inherit;text-decoration:none}h1 a:hover{text-decoration:underline;tex
 .ext{width:.5em;height:.5em;margin-left:.25em;vertical-align:.45em;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;opacity:.7}
 .nw{white-space:nowrap}
 .bar span.now{display:flex;align-items:center;justify-content:center;font:700 11px/1 Barlow,sans-serif;color:var(--ink)}.bar span.now.g{color:#fff}
+.bar span.edge{display:flex;align-items:center;justify-content:center;font:600 11px/1 Barlow,sans-serif;color:var(--muted)}
 </style>
 </head>
 <body>
@@ -246,9 +247,12 @@ function render(){const t=now(),p=B(t);
  const sum=isSummer(p.m,p.d);$('sumBadge').innerHTML=sum?'<span class="cur">aktuell</span>':'';$('winBadge').innerHTML=sum?'':'<span class="cur">aktuell</span>';
  $('halbTitle').textContent='Sperrzeiten · aktuell '+(sum?'Sommerhalbjahr':'Winterhalbjahr');
  const noon0=fromBerlin(p.y,p.m,p.d,12,0);let w='';for(let d=0;d<7;d++){const q=B(noon0+d*864e5),h0=fromBerlin(q.y,q.m,q.d,0,0),hn2=holName(q);
-  const row=pr=>{let c='<div class="bar" role="img" aria-label="'+(LABEL[pr]||pr)+'">';
-   for(let h=0;h<24;h++){const ts=fromBerlin(q.y,q.m,q.d,h,0);const ok=blocked(ts,pr)==='';const isNow=d===0&&h===p.h;
-    c+='<span class="'+(ok?'g':'')+(isNow?' now':'')+'" title="'+pad(h)+'–'+pad(h+1)+' Uhr: '+(ok?'gültig':'nicht gültig')+'">'+(isNow?h:'')+'</span>'}return c+'</div>'};
+  const row=pr=>{const oks=[];for(let h=0;h<24;h++)oks.push(blocked(fromBerlin(q.y,q.m,q.d,h,0),pr)==='');
+   let c='<div class="bar" role="img" aria-label="'+(LABEL[pr]||pr)+'">';
+   for(let h=0;h<24;h++){const ok=oks[h],isNow=d===0&&h===p.h;
+    const first=!ok&&(h===0||oks[h-1]),last=!ok&&(h===23||oks[h+1]);
+    const lab=isNow||first?h:last?h+1:'';
+    c+='<span class="'+(ok?'g':'')+(isNow?' now':'')+(first||last?' edge':'')+'" title="'+pad(h)+'–'+pad(h+1)+' Uhr: '+(ok?'gültig':'nicht gültig')+'">'+lab+'</span>'}return c+'</div>'};};
   w+='<div class="day"><div class="lbl">'+WD[q.wd]+' '+pad(q.d)+'.'+pad(q.m)+'.'+(hn2?'<small>'+esc(hn2)+'</small>':'')+'</div>'+ORDER.map(row).join('')+'</div>'}
  w+='<div class="day hrs"><div class="lbl"></div><div class="bar hrs">'+[0,3,6,9,12,15,18].map(h=>'<span>'+h+'</span>').join('')+'<span class="end"><i>21</i><i>24</i></span>'+'</div></div>';
  $('week').innerHTML=w}
